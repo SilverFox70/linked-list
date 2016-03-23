@@ -7,9 +7,15 @@ class Node
 end
 
 class Linked_List
+	attr_accessor :head
+	
 	def initialize(value)
 		@head = Node.new(value)
 		@current_node = @head
+	end
+
+	def node
+		@current_node
 	end
 
 	def add(value)
@@ -19,13 +25,44 @@ class Linked_List
 	end
 
 	def count_nodes
-		node = @head
 		counter = 0
-		while !node.link_to.nil?
-			node = node.link_to
-			counter += 1
+		self.each_node {|n| counter += 1}
+		counter
+	end
+
+	def delete(value, all=false)
+		node = @head
+		deleted_node = nil
+		if node.value == value
+			@head = @head.link_to
+		else
+			self.each_node do |n|
+				if (!n.link_to.nil?) && (n.link_to.value == value)
+					deleted_node = n.link_to
+					n.link_to = n.link_to.link_to
+					break unless all
+				end
+			end
 		end
-		count
+		deleted_node
+	end
+
+	def delete_all(value)
+		deleted_node = self.delete(value, true)
+	end
+
+	def display
+		str = ""
+		self.each_node {|n| str << "node: #{n.value} \n"}
+		str
+	end
+
+	def each_node
+		node = @head
+		while !node.nil?
+			yield node
+			node = node.link_to
+		end
 	end
 end
 
@@ -33,19 +70,18 @@ end
 #====================================
 #Simple tests
 #====================================
-current_node = Linked_List.new("first node")
-link_node = Linked_List.add("second node")
-# for i in 1..8
-# 	new_node = Node.new(i)
-# 	current_node.link = new_node
-# 	current_node = current_node.link
-# 	puts "node #{i} complete"
-# end
+my_list = Linked_List.new("node 1")
+link_node = my_list.add("node 2")
 
-puts "node: #{current_node.value} \t object: #{current_node}"
-puts "node: #{current_node.link_to}"
-puts "node: #{current_node.link_to.value}"
-puts "count: #{current_node.count_nodes()}"
+for i in 1..7
+	my_list.add("node #{i}")
+end
 
-# current_node.each_node {|n| puts "node: #{n}"}
+puts "count: #{my_list.count_nodes()}"
+puts my_list.display
+puts "-" * 30
+# my_list.delete("node 3")
+puts my_list.delete_all("node 3")
+puts my_list.display
+
 
