@@ -99,7 +99,8 @@ class Linked_List
 
 	def to_a
 		arr = []
-		self.each_node {|node| arr << node}
+		self.each_node {|node| arr << node.value}
+		arr
 	end
 
 	def each_node
