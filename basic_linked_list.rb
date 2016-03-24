@@ -24,7 +24,7 @@ class Linked_List
 		@current_node = @current_node.link_to
 	end
 
-	def count_nodes
+	def size
 		counter = 0
 		self.each_node {|n| counter += 1}
 		counter
@@ -35,7 +35,7 @@ class Linked_List
 		deleted_node = nil
 		if node.value == value
 			@head = @head.link_to
-		else
+		end
 			self.each_node do |n|
 				if (!n.link_to.nil?) && (n.link_to.value == value)
 					deleted_node = n.link_to
@@ -43,12 +43,45 @@ class Linked_List
 					break unless all
 				end
 			end
-		end
+		# end
 		deleted_node
 	end
 
 	def delete_all(value)
 		deleted_node = self.delete(value, true)
+	end
+
+	def unshift(value)
+		node = Node.new(value)
+		node.link_to = @head
+		@head = node
+	end
+
+	def insert(value, index)
+		if index == 0
+			self.unshift(value)
+			return
+		end
+		new_node = Node.new(value)
+		pos = 1
+		self.each_node do |node|
+			if pos == index
+				new_node.link_to = node.link_to
+				node.link_to = new_node
+				pos += 1
+			end
+		end
+	end
+
+	def update(value, index)
+		pos = 0
+		updated = false
+		self.each_node do |node|
+			if pos == index
+				node.value = value
+			end
+		end
+		updated
 	end
 
 	def display
@@ -64,6 +97,10 @@ class Linked_List
 			node = node.link_to
 		end
 	end
+
+	def is_empty?
+		@head.nil?
+	end
 end
 
 
@@ -77,11 +114,15 @@ for i in 1..7
 	my_list.add("node #{i}")
 end
 
-puts "count: #{my_list.count_nodes()}"
+puts "count: #{my_list.size()}"
 puts my_list.display
 puts "-" * 30
-# my_list.delete("node 3")
-puts my_list.delete_all("node 3")
+puts my_list.delete_all("node 1")
 puts my_list.display
-
+puts "-" * 30
+my_list.unshift("node A")
+puts my_list.display
+puts "-" * 30
+my_list.insert("node B",0)
+puts my_list.display
 
