@@ -53,7 +53,8 @@ class Linked_List
 
 	##
 	# Deletes the node whose value matches the
-	# value passed in.
+	# value passed in. Returns the node that was
+	# deleted, or :nil: if no node was removed.
 	def delete(value, all=false)
 		node = @head
 		deleted_node = nil
@@ -90,11 +91,15 @@ class Linked_List
 
 	##
 	# Insert a node into the list at the position
-	# just before the specified index
+	# just before the specified index. Note that the Head
+	# Node is at position 0. If successful
+	# the return value will be true.  A false return
+	# indicates the value could not be placed in the list
 	def insert(value, index)
+		inserted = false
 		if index == 0
 			self.unshift(value)
-			return
+			return true
 		end
 		new_node = Node.new(value)
 		pos = 1
@@ -102,14 +107,17 @@ class Linked_List
 			if pos == index
 				new_node.link_to = node.link_to
 				node.link_to = new_node
-				pos += 1
+				inserted = true
 			end
+			pos += 1
 		end
+		inserted
 	end
 
 	##
 	# Update the node at the given index with the
-	# new value
+	# new value. Returns :true: if any node was
+	# updated and :false: otherwise
 	def update(value, index)
 		pos = 0
 		updated = false
@@ -123,11 +131,13 @@ class Linked_List
 
 	##
 	# Update all nodes whose value equals the
-	# old_value
+	# old_value. Returns :true: if any nodes were
+	# updated and :false: otherwise
 	def update_all(old_value, new_value)
 		updated = false
 		self.each_node do |node| 
 			node.value = new_value if node.value == old_value
+			updated = true
 		end
 	end
 
@@ -147,6 +157,20 @@ class Linked_List
 		arr = []
 		self.each_node {|node| arr << node.value}
 		arr
+	end
+
+	##
+	# Returns the value of the node at position
+	# +pos+ within the list or +nil+ no such 
+	# position exists.
+	def find_at(pos)
+		counter = 0
+		self.each_node do |node|
+			if pos == counter
+				return node.value
+			end
+		end
+		nil
 	end
 
 	##
@@ -186,9 +210,11 @@ puts "-" * 30
 my_list.unshift("node A")
 puts my_list.display
 puts "-" * 30
-my_list.insert("node B",0)
+my_list.insert("node B",4)
 puts my_list.display
+puts "-" * 30
 my_list.update_all("node 2", "node C")
 puts my_list.display
+puts "-" * 30
 p my_list.to_a
 
