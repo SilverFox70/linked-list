@@ -88,6 +88,7 @@ class Linked_List
 		updated = false
 		self.each_node do |node| 
 			node.value = new_value if node.value == old_value
+		end
 	end
 
 	def display
