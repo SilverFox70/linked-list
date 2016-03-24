@@ -84,10 +84,21 @@ class Linked_List
 		updated
 	end
 
+	def update_all(old_value, new_value)
+		updated = false
+		self.each_node do |node| 
+			node.value = new_value if node.value == old_value
+	end
+
 	def display
 		str = ""
 		self.each_node {|n| str << "node: #{n.value} \n"}
 		str
+	end
+
+	def to_a
+		arr = []
+		self.each_node {|node| arr << node}
 	end
 
 	def each_node
@@ -125,4 +136,7 @@ puts my_list.display
 puts "-" * 30
 my_list.insert("node B",0)
 puts my_list.display
+my_list.update_all("node 2", "node C")
+puts my_list.display
+p my_list.to_a
 
